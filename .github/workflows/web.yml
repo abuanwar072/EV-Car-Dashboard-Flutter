@@ -2,7 +2,7 @@ name: The Flutter Way
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   build:
