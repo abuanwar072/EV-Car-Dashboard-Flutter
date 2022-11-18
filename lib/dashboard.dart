@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'dart:ui' as ui;
 
@@ -19,109 +18,123 @@ class _DashboardState extends State<Dashboard> {
   List<double> speedLineOpacities = [1, 0.8, 0.6, 0.4, 0.3, 0.2, 0.15, 0.1];
   @override
   Widget build(BuildContext context) {
-    // print(MediaQuery.of(context).size.width);
-
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          Container(
-            constraints: const BoxConstraints(
-              minWidth: 1184,
-              maxWidth: 1480,
-              minHeight: 456,
-              maxHeight: 570,
-            ),
-            child: AspectRatio(
-              aspectRatio: 2.59,
-              child: LayoutBuilder(
-                builder: (context, constraints) => CustomPaint(
-                  painter: PathPainter(),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TimeAndTemp(constraints: constraints),
-                      Expanded(
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Column(
-                              children: [
-                                const SizedBox(height: 20),
-                                const CarIndicators(),
-                                const Spacer(),
-                                const CurrentSpeed(speed: 54),
-                                const Spacer(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+      body: SizedBox(
+        width: double.infinity,
+        child: (size.width > 1184 && size.height > 604)
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(16),
+                    constraints: const BoxConstraints(
+                      minWidth: 1184,
+                      maxWidth: 1480,
+                      minHeight: 456,
+                      maxHeight: 604,
+                    ),
+                    // alignment: Alignment.center,
+                    child: AspectRatio(
+                      aspectRatio: 2.59,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) => CustomPaint(
+                          painter: PathPainter(),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            // crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TimeAndTemp(constraints: constraints),
+                              Expanded(
+                                child: Stack(
+                                  fit: StackFit.expand,
                                   children: [
-                                    SvgPicture.asset(
-                                      "assets/icons/speed_miter.svg",
-                                      height: 32,
+                                    Column(
+                                      children: [
+                                        const SizedBox(height: 20),
+                                        const CarIndicators(),
+                                        const Spacer(),
+                                        const CurrentSpeed(speed: 54),
+                                        const Spacer(),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/speed_miter.svg",
+                                              height: 32,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8),
+                                              child: Text(
+                                                "100 km/H",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(
+                                                        color: const Color(
+                                                            0xFF6B4339)),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        GearAndBattery(
+                                            constraints: constraints),
+                                      ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: Text(
-                                        "100 km/H",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                color: const Color(0xFF6B4339)),
+                                    ...List.generate(
+                                      speedLineOpacities.length,
+                                      (index) => Positioned(
+                                        bottom: 20 + (2 * index).toDouble(),
+                                        left: constraints.maxWidth * 0.13 -
+                                            (30 * index),
+                                        height: constraints.maxHeight * 0.8,
+                                        width: constraints.maxWidth * 0.31,
+                                        child: Opacity(
+                                          opacity: speedLineOpacities[index],
+                                          child: CustomPaint(
+                                            painter: SpeedLinePainter(),
+                                          ),
+                                        ),
                                       ),
-                                    )
+                                    ),
+                                    ...List.generate(
+                                      speedLineOpacities.length,
+                                      (index) => Positioned(
+                                        bottom: 20 + (2 * index).toDouble(),
+                                        right: constraints.maxWidth * 0.13 -
+                                            (30 * index),
+                                        height: constraints.maxHeight * 0.8,
+                                        width: constraints.maxWidth * 0.31,
+                                        child: Transform.scale(
+                                          scaleX: -1,
+                                          child: Opacity(
+                                            opacity: speedLineOpacities[index],
+                                            child: CustomPaint(
+                                              painter: SpeedLinePainter(),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
-                                GearAndBattery(constraints: constraints),
-                              ],
-                            ),
-                            ...List.generate(
-                              speedLineOpacities.length,
-                              (index) => Positioned(
-                                bottom: 20 + (2 * index).toDouble(),
-                                left:
-                                    constraints.maxWidth * 0.13 - (30 * index),
-                                height: constraints.maxHeight * 0.8,
-                                width: constraints.maxWidth * 0.31,
-                                child: Opacity(
-                                  opacity: speedLineOpacities[index],
-                                  child: CustomPaint(
-                                    painter: SpeedLinePainter(),
-                                  ),
-                                ),
                               ),
-                            ),
-                            ...List.generate(
-                              speedLineOpacities.length,
-                              (index) => Positioned(
-                                bottom: 20 + (2 * index).toDouble(),
-                                right:
-                                    constraints.maxWidth * 0.13 - (30 * index),
-                                height: constraints.maxHeight * 0.8,
-                                width: constraints.maxWidth * 0.31,
-                                child: Transform.scale(
-                                  scaleX: -1,
-                                  child: Opacity(
-                                    opacity: speedLineOpacities[index],
-                                    child: CustomPaint(
-                                      painter: SpeedLinePainter(),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
+              )
+            : Center(
+                child: Text("Screen is small to show it"),
               ),
-            ),
-          ),
-        ],
       ),
     );
   }
