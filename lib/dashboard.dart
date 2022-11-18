@@ -133,7 +133,8 @@ class _DashboardState extends State<Dashboard> {
                 ],
               )
             : Center(
-                child: Text("Screen is small to show it"),
+                child: Text(
+                    "The screen is too small to display the UI \n It can't be viewed on a phone. Try resizing your browser if you are on the web."),
               ),
       ),
     );
