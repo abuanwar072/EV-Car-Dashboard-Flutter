@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
 
 import '../dashboard.dart';
 import 'gears.dart';

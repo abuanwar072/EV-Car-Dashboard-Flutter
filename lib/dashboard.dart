@@ -8,9 +8,15 @@ import 'components/current_speed.dart';
 import 'components/gear_battery.dart';
 import 'components/time_and_temp.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  List<double> speedLineOpacities = [1, 0.8, 0.6, 0.4, 0.3, 0.2, 0.15, 0.1];
   @override
   Widget build(BuildContext context) {
     // print(MediaQuery.of(context).size.width);
@@ -70,6 +76,41 @@ class Dashboard extends StatelessWidget {
                                 const SizedBox(height: 10),
                                 GearAndBattery(constraints: constraints),
                               ],
+                            ),
+                            ...List.generate(
+                              speedLineOpacities.length,
+                              (index) => Positioned(
+                                bottom: 20 + (2 * index).toDouble(),
+                                left:
+                                    constraints.maxWidth * 0.13 - (30 * index),
+                                height: constraints.maxHeight * 0.8,
+                                width: constraints.maxWidth * 0.31,
+                                child: Opacity(
+                                  opacity: speedLineOpacities[index],
+                                  child: CustomPaint(
+                                    painter: SpeedLinePainter(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            ...List.generate(
+                              speedLineOpacities.length,
+                              (index) => Positioned(
+                                bottom: 20 + (2 * index).toDouble(),
+                                right:
+                                    constraints.maxWidth * 0.13 - (30 * index),
+                                height: constraints.maxHeight * 0.8,
+                                width: constraints.maxWidth * 0.31,
+                                child: Transform.scale(
+                                  scaleX: -1,
+                                  child: Opacity(
+                                    opacity: speedLineOpacities[index],
+                                    child: CustomPaint(
+                                      painter: SpeedLinePainter(),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -302,5 +343,41 @@ class DashLinePainter extends CustomPainter {
   @override
   bool shouldRepaint(DashLinePainter oldDelegate) {
     return oldDelegate.progress != progress;
+  }
+}
+
+class SpeedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    const double stockWidth = 8;
+    Path path_0 = Path()
+      ..moveTo(size.width * 0.76, 0)
+      ..lineTo(size.width, size.height * 0.30)
+      ..lineTo(size.width - stockWidth, size.height * 0.30)
+      ..close();
+
+    Path path1 = Path()
+      ..moveTo(size.width, size.height * 0.30)
+      ..lineTo(40, size.height - 20)
+      ..lineTo(size.width - stockWidth, size.height * 0.30)
+      ..close();
+
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.shader = ui.Gradient.linear(
+        Offset(size.width * 0.9125874, size.height * -0.000008129217),
+        Offset(size.width * 0.8369860, size.height * 1.762893), [
+      const Color(0xff6B4339).withOpacity(1),
+      const Color(0xff7D7472).withOpacity(0.79)
+    ], [
+      0,
+      1
+    ]);
+    canvas.drawPath(path_0, paint0Fill);
+    canvas.drawPath(path1, paint0Fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
