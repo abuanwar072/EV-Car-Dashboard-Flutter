@@ -1,4 +1,4 @@
-import 'package:car_dashbord/dashboard.dart';
+import 'package:car_dashbord/hmi_dashboard.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'The Flutter Way',
       theme: ThemeData.dark(),
-      home: const Dashboard(),
+      home: const HmiDashboard(),
     );
   }
 }
